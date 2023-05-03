@@ -1,0 +1,8 @@
+This is a question I keep asking myself over and over again.
+
+Where the fuck is the option to create a repository (sub)folder in this moronic platform named GitHub?
+One can create files
+One can upload files
+One cannot create a folder
+
+Who the fuck put these imbecils in control of so many people's code?!?
