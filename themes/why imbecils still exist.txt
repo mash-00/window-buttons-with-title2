@@ -1,8 +1,12 @@
-This is a question I keep asking myself over and over again.
+This is a question I keep asking myself over and over again: why do imbecils still exist?
 
 Where the fuck is the option to create a repository (sub)folder in this moronic platform named GitHub?
-One can create files
-One can upload files
-One cannot create a folder
+One can create files;
+One can upload files;
+  But cannot upload too many at a time;
+  Since all the required files are in a subfolder, a folder must be created here before uploading part of the files in it;
+  But one cannot simply create a folder;
+    One can only indirectly create a folder by asking to create a file, and then typing a folder name then a file name;
+    Therefore I had to create this file.
 
-Who the fuck put these imbecils in control of so many people's code?!?
+Who the fuck put these imbecils in control of so many people's code?!? Or, is there any human involved AT ALL...???
