@@ -641,7 +641,7 @@ WindowButtonApplet.prototype = {
 		}
 	},
 	_cinnamonmaximus: function() {
-		Util.spawn(["xdg-open", "http://cinnamon-spices.linuxmint.com/extensions/view/29"]);
+		Util.spawn(["xdg-open", "https://cinnamon-spices.linuxmint.com/extensions/view/73"]);
 	}
 };
 
