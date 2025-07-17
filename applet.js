@@ -182,9 +182,6 @@ WindowButtonApplet.prototype = {
 		this.actor.add(this.button["title"]);
 		// this.updateWindowTitle();
 		this.button["title"].connect("button-press-event", Lang.bind(this, function(actor, event) {
-			if (this.button["title"].opacity == 0) {
-				return false;
-			}
 			let button = event.get_button();
 			if (button == 1) {
 				if (this.titleButtonAction == 1) {
@@ -244,9 +241,6 @@ WindowButtonApplet.prototype = {
 		this.actor.add(this.button["icon"]);
 
 		this.button["icon"].connect("button-press-event", Lang.bind(this, function(actor, event) {
-			if (this.button["icon"].opacity == 0) {
-				return false;
-			}
 			let button = event.get_button();
 
 			if (button == 1) {
@@ -327,9 +321,6 @@ WindowButtonApplet.prototype = {
 	},
 
 	minimizeWindow: function() {
-		if (this.button["minimize"].opacity == 0) {
-			return false;
-		}
 		let activeWindow = global.display.focus_window;
 		let tracker = Cinnamon.WindowTracker.get_default();
 		let app = tracker.get_window_app(activeWindow);
@@ -379,9 +370,6 @@ WindowButtonApplet.prototype = {
 	},
 
 	maximizeWindow: function() {
-		if (this.button["maximize"].opacity == 0) {
-			return false;
-		}
 		let activeWindow = global.display.focus_window;
 		if (activeWindow) {
 			let tracker = Cinnamon.WindowTracker.get_default();
@@ -435,9 +423,6 @@ WindowButtonApplet.prototype = {
 	},
 
 	closeWindow: function() {
-		if (this.button["close"].opacity == 0) {
-			return false;
-		}
 		let activeWindow = global.display.focus_window;
 		let tracker = Cinnamon.WindowTracker.get_default();
 		let app = tracker.get_window_app(activeWindow);
@@ -484,6 +469,9 @@ WindowButtonApplet.prototype = {
 				let t = _(this.titleDesktopText.toString());
 				this.button["title"].get_child().set_text("  " + t.toString());
 			}
+		} else {
+				let t = _(this.titleDesktopText.toString());
+				this.button["title"].get_child().set_text("  " + t.toString());
 		}
 	},
 
@@ -545,7 +533,6 @@ WindowButtonApplet.prototype = {
 		} else {
 			for (let i = 0; i < buttons.length; ++i) {
 				this.button[buttons[i]].show();
-				this.button[buttons[i]].opacity = 255;
 			}
 		}
 	},
@@ -584,23 +571,27 @@ WindowButtonApplet.prototype = {
 			// if active window is Desktop
 			return true;
 		} else {
-			current_window.raise();
-			Mainloop.idle_add(function() {
-				let pointer = Gdk.Display.get_default().get_device_manager().get_client_pointer(),
-					[scr, ] = pointer.get_position(),
-					rect = current_window.get_outer_rect(),
-					x = rect.x + rect.width / 2,
-					y = rect.y;
-				//
-				/*if (!current_window.get_maximized()) {
-				 */
-				pointer.warp(scr, x, y);
-				// }
-				global.display.begin_grab_op(global.screen, current_window,
-					Meta.GrabOp.MOVING, false, true, 0, 0,
-					global.get_current_time(), x, y);
-				return false;
+
+			//based on _grabAction from /usr/share/cinnamon/js/ui/windowMenu.js
+			let grabOp = Meta.GrabOp.KEYBOARD_MOVING;
+			let time = global.get_current_time();
+			if (global.display.get_grab_op() == Meta.GrabOp.NONE) {
+				current_window.begin_grab_op(grabOp, true, time);
+				return;
+			}
+
+			let waitId = 0;
+			let id = global.display.connect('grab-op-end', display => {
+				display.disconnect(id);
+				GLib.source_remove(waitId);
+				current_window.begin_grab_op(grabOp, true, time);
 			});
+
+			waitId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
+				global.display.disconnect(id);
+				return GLib.SOURCE_REMOVE;
+			});
+
 			return true;
 		}
 		return true;
@@ -628,15 +619,11 @@ WindowButtonApplet.prototype = {
 		let buttons = this.buttons_style.split(":");
 		if (app && w.get_maximized()) {
 			for (let i = 0; i < buttons.length; ++i) {
-				//              this.button[buttons[i]].show();
-				this.button[buttons[i]].opacity = 255;
+				this.button[buttons[i]].show();
 			}
 		} else {
 			for (let i = 0; i < buttons.length; ++i) {
-				//              this.button[buttons[i]].hide();
-				if (buttons[i] != "icon") {
-					this.button[buttons[i]].opacity = 0;
-				}
+				this.button[buttons[i]].hide();
 			}
 		}
 	},

@@ -15,6 +15,7 @@
     "description": "Buttons Theme  (Needs Restart Cinnamon)",
     "options": {
       "Default": "default",
+      "Adapta": "Adapta",
       "Ambiance": "Ambiance",
       "Ambiance-Blue": "Ambiance-Blue",
       "Mac-OS-X": "Mac-OS-X",
